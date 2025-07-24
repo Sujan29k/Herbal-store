@@ -1,0 +1,86 @@
+.heroWrapper {
+  background-color: #fff;
+  padding: 4rem 1rem;
+}
+
+.heroContent {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: center;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.imageContainer {
+  flex: 1;
+  min-width: 280px;
+  display: flex;
+  justify-content: center;
+}
+
+.imageContainer img {
+  width: 100%;
+  max-width: 500px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 2px solid #ccc;
+}
+
+.textContainer {
+  flex: 1;
+  min-width: 280px;
+}
+
+.textContainer h2 {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #222;
+  margin-bottom: 1rem;
+}
+
+.textContainer h2 span {
+  color: #333;
+}
+
+.textContainer p {
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.6;
+}
+
+.exploreSection {
+  margin-top: 3rem;
+  text-align: center;
+}
+
+.exploreSection button {
+  padding: 0.75rem 2rem;
+  background-color: #ff6b00;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.exploreSection button:hover {
+  background-color: #e65c00;
+}
+
+@media (max-width: 768px) {
+  .textContainer h2 {
+    font-size: 1.6rem;
+  }
+
+  .textContainer p {
+    font-size: 0.95rem;
+  }
+
+  .exploreSection button {
+    width: 100%;
+    max-width: 300px;
+  }
+}
