@@ -1,0 +1,21 @@
+import mongoose, { Schema, Document, models } from "mongoose";
+
+export interface IProduct extends Document {
+  name: string;
+  description: string;
+  price: number;
+  image: string; // Base64
+  createdAt: Date;
+}
+
+const ProductSchema = new Schema<IProduct>(
+  {
+    name: { type: String, required: true },
+    description: { type: String },
+    price: { type: Number, required: true },
+    image: { type: String, required: true }, // base64
+    createdAt: { type: Date, default: Date.now },
+  }
+);
+
+export default models.Product || mongoose.model<IProduct>("Product", ProductSchema);
