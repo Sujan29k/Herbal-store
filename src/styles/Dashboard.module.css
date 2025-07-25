@@ -1,0 +1,108 @@
+.dashboardWrapper {
+    display: flex;
+    min-height: 100vh;
+    font-family: sans-serif;
+  }
+  
+  .sidebar {
+    background-color: #e6f4ea;
+    width: 250px;
+    padding: 2rem 1rem;
+    border-right: 1px solid #d1d5db;
+  }
+  
+  .sidebar h2 {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+    color: #065f46;
+  }
+  
+  .sidebar ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .sidebar li {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    border-radius: 6px;
+    color: #334155;
+  }
+  
+  .sidebar li:hover {
+    background-color: #d1fae5;
+  }
+  
+  .mainContent {
+    flex: 1;
+    padding: 2rem;
+    background-color: #f9fafb;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+  
+  .header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .profile {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+  
+  .profile input {
+    padding: 0.5rem 1rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    outline: none;
+  }
+  
+  .avatar {
+    border-radius: 50%;
+    border: 2px solid #a7f3d0;
+  }
+  
+  .productsSection {
+    margin-top: 2rem;
+  }
+  
+  .productsSection h2 {
+    margin-bottom: 1.5rem;
+    color: #065f46;
+  }
+  
+  .productGrid {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
+  
+  .card {
+    background: white;
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    text-align: center;
+    transition: transform 0.2s ease;
+  }
+  
+  .card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .card h3 {
+    margin-top: 0.5rem;
+    color: #064e3b;
+  }
+  
+  .card p {
+    color: #64748b;
+    font-size: 0.9rem;
+  }
+  
