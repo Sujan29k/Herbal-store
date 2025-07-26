@@ -1,58 +1,68 @@
 "use client";
-import styles from "@/styles/Dashboard.module.css";
-import Image from "next/image";
 
-export default function DashboardPage() {
+import { useEffect, useState } from "react";
+import ProductCard from "@/components/ProductCard";
+import { useRouter } from "next/navigation";
+
+interface Product {
+  _id: string;
+  name: string;
+  description: string;
+  price: number;
+  image: string;
+}
+
+export default function UserDashboard() {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
+
+  useEffect(() => {
+    async function fetchProducts() {
+      try {
+        const res = await fetch("/api/products");
+        const data = await res.json();
+        setProducts(data);
+      } catch (err) {
+        console.error("Failed to fetch products");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchProducts();
+  }, []);
+
+  const handleAddToCart = async (product: Product) => {
+    // Add to cart logic here
+    alert(`✅ "${product.name}" added to cart`);
+  };
+
+  const handleBuyNow = (product: Product) => {
+    // Redirect to checkout with selected product
+    router.push(`/checkout?productId=${product._id}`);
+  };
+
   return (
-    <div className={styles.dashboardWrapper}>
-      {/* Sidebar */}
-      <aside className={styles.sidebar}>
-        <h2>🌿 HerbalAdmin</h2>
-        <nav>
-          <ul>
-            <li>Dashboard</li>
-            <li>Products</li>
-            <li>Orders</li>
-            <li>Customers</li>
-            <li>Analytics</li>
-          </ul>
-        </nav>
-      </aside>
+    <div className="max-w-6xl mx-auto p-6">
+      <h1 className="text-3xl font-bold mb-6">Explore Herbal Products 🌿</h1>
 
-      {/* Main content */}
-      <main className={styles.mainContent}>
-        <header className={styles.header}>
-          <h1>Welcome back 👋</h1>
-          <div className={styles.profile}>
-            <input type="text" placeholder="Search..." />
-            <Image
-              src="/user-avatar.png"
-              alt="User"
-              width={36}
-              height={36}
-              className={styles.avatar}
+      {loading ? (
+        <p>Loading products...</p>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          {products.map((product) => (
+            <ProductCard
+              key={product._id}
+              title={product.name}
+              price={product.price}
+              image={product.image}
+              onAddToCart={() => handleAddToCart(product)}
+              onBuyNow={() => handleBuyNow(product)}
             />
-          </div>
-        </header>
-
-        <section className={styles.productsSection}>
-          <h2>Featured Herbal Products</h2>
-          <div className={styles.productGrid}>
-            {[1, 2, 3, 4].map((id) => (
-              <div key={id} className={styles.card}>
-                <Image
-                  src={`/products/product-${id}.jpg`}
-                  alt={`Product ${id}`}
-                  width={200}
-                  height={150}
-                />
-                <h3>Herbal Product {id}</h3>
-                <p>Natural remedy for wellness.</p>
-              </div>
-            ))}
-          </div>
-        </section>
-      </main>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
