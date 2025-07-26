@@ -1,58 +1,148 @@
 "use client";
-import styles from "@/styles/Dashboard.module.css";
-import Image from "next/image";
 
-export default function DashboardPage() {
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+
+interface Product {
+  _id: string;
+  name: string;
+  price: number;
+  image: string;
+}
+
+export default function CheckoutPage() {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
+  });
+
+  const searchParams = useSearchParams();
+  const productId = searchParams.get("productId");
+
+  // Load Buy Now product or Cart
+  useEffect(() => {
+    async function load() {
+      if (productId) {
+        // Buy Now flow
+        try {
+          const res = await fetch(`/api/products/${productId}`);
+          const product = await res.json();
+          setProducts([product]);
+        } catch (err) {
+          console.error("Failed to fetch product");
+        }
+      } else {
+        // Cart flow
+        const items = JSON.parse(localStorage.getItem("cart") || "[]");
+        setProducts(items);
+      }
+
+      setLoading(false);
+    }
+
+    load();
+  }, [productId]);
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async () => {
+    if (!form.name || !form.email || !form.phone || !form.address) {
+      alert("Please fill in all fields.");
+      return;
+    }
+
+    const total = products.reduce((sum, item) => sum + item.price, 0);
+
+    alert(
+      `✅ Order placed!\n\nName: ${form.name}\nTotal: ₹${total}\n\n(You can integrate email/SMS API here.)`
+    );
+
+    // Optionally clear cart
+    localStorage.removeItem("cart");
+  };
+
   return (
-    <div className={styles.dashboardWrapper}>
-      {/* Sidebar */}
-      <aside className={styles.sidebar}>
-        <h2>🌿 HerbalAdmin</h2>
-        <nav>
-          <ul>
-            <li>Dashboard</li>
-            <li>Products</li>
-            <li>Orders</li>
-            <li>Customers</li>
-            <li>Analytics</li>
-          </ul>
-        </nav>
-      </aside>
+    <div className="max-w-3xl mx-auto p-6">
+      <h1 className="text-2xl font-bold mb-4">Checkout</h1>
 
-      {/* Main content */}
-      <main className={styles.mainContent}>
-        <header className={styles.header}>
-          <h1>Welcome back 👋</h1>
-          <div className={styles.profile}>
-            <input type="text" placeholder="Search..." />
-            <Image
-              src="/user-avatar.png"
-              alt="User"
-              width={36}
-              height={36}
-              className={styles.avatar}
-            />
-          </div>
-        </header>
-
-        <section className={styles.productsSection}>
-          <h2>Featured Herbal Products</h2>
-          <div className={styles.productGrid}>
-            {[1, 2, 3, 4].map((id) => (
-              <div key={id} className={styles.card}>
-                <Image
-                  src={`/products/product-${id}.jpg`}
-                  alt={`Product ${id}`}
-                  width={200}
-                  height={150}
+      {loading ? (
+        <p>Loading items...</p>
+      ) : products.length === 0 ? (
+        <p>No items to checkout.</p>
+      ) : (
+        <>
+          <div className="space-y-4 mb-6">
+            {products.map((item, index) => (
+              <div
+                key={index}
+                className="border p-4 rounded-lg flex justify-between items-center"
+              >
+                <div>
+                  <h2 className="text-lg font-semibold">{item.name}</h2>
+                  <p>Price: ₹{item.price}</p>
+                </div>
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  className="h-16 w-16 object-cover rounded"
                 />
-                <h3>Herbal Product {id}</h3>
-                <p>Natural remedy for wellness.</p>
               </div>
             ))}
+            <p className="text-right font-semibold">
+              Total: ₹{products.reduce((sum, item) => sum + item.price, 0)}
+            </p>
           </div>
-        </section>
-      </main>
+
+          <div className="space-y-4">
+            <input
+              type="text"
+              name="name"
+              placeholder="Your Name"
+              value={form.name}
+              onChange={handleChange}
+              className="w-full p-2 border rounded"
+            />
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              value={form.email}
+              onChange={handleChange}
+              className="w-full p-2 border rounded"
+            />
+            <input
+              type="tel"
+              name="phone"
+              placeholder="Phone Number"
+              value={form.phone}
+              onChange={handleChange}
+              className="w-full p-2 border rounded"
+            />
+            <textarea
+              name="address"
+              placeholder="Shipping Address"
+              value={form.address}
+              onChange={handleChange}
+              className="w-full p-2 border rounded"
+            />
+
+            <button
+              onClick={handleSubmit}
+              className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700"
+            >
+              Confirm Purchase
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 }

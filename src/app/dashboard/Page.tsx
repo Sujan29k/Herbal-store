@@ -15,8 +15,10 @@ interface Product {
 export default function UserDashboard() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const router = useRouter();
 
+  // Fetch product data
   useEffect(() => {
     async function fetchProducts() {
       try {
@@ -30,22 +32,53 @@ export default function UserDashboard() {
       }
     }
 
+    // Optional: check user login session
+    async function checkLogin() {
+      try {
+        const res = await fetch("/api/auth/session"); // Update this endpoint based on your auth
+        const data = await res.json();
+        setIsLoggedIn(!!data?.user);
+      } catch (err) {
+        setIsLoggedIn(false);
+      }
+    }
+
     fetchProducts();
+    checkLogin();
   }, []);
 
-  const handleAddToCart = async (product: Product) => {
-    // Add to cart logic here
-    alert(`✅ "${product.name}" added to cart`);
+  // Store cart items in localStorage
+  const handleAddToCart = (product: Product) => {
+    try {
+      const existingCart = JSON.parse(localStorage.getItem("cart") || "[]");
+      const updatedCart = [...existingCart, product];
+      localStorage.setItem("cart", JSON.stringify(updatedCart));
+      alert(`✅ "${product.name}" added to cart`);
+    } catch (error) {
+      console.error("Error saving to cart", error);
+    }
   };
 
   const handleBuyNow = (product: Product) => {
-    // Redirect to checkout with selected product
+    if (!isLoggedIn) {
+      alert(
+        "You are continuing as a guest. Log in at checkout to save your order history."
+      );
+    }
     router.push(`/checkout?productId=${product._id}`);
   };
 
   return (
     <div className="max-w-6xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">Explore Herbal Products 🌿</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold">Explore Herbal Products 🌿</h1>
+        <button
+          onClick={() => router.push("/cart")}
+          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+        >
+          🛒 View Cart
+        </button>
+      </div>
 
       {loading ? (
         <p>Loading products...</p>
