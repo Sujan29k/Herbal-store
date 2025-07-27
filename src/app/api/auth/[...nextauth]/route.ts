@@ -1,10 +1,10 @@
-import NextAuth from "next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { connectDB } from "@/lib/mongoose";
 import User from "@/models/User";
 import { compare } from "bcryptjs";
 
-const handler = NextAuth({
+export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -17,24 +17,38 @@ const handler = NextAuth({
 
         await connectDB();
         const user = await User.findOne({ email: credentials.email });
-        if (!user) throw new Error("No user found");
+        if (!user) return null;
 
         const isValid = await compare(credentials.password, user.password);
-        if (!isValid) throw new Error("Invalid password");
+        if (!isValid) return null;
 
         return {
           id: user._id.toString(),
           name: user.name,
           email: user.email,
-          role: user.role,
+          role: user.role, // important
         };
       },
     }),
   ],
-  session: { strategy: "jwt" },
-  pages: {
-    signIn: "/login",
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        (token as any).role = (user as any).role;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (session.user) {
+        (session.user as any).role = (token as any).role;
+      }
+      return session;
+    },
   },
-});
+  session: { strategy: "jwt" },
+  pages: { signIn: "/login" },
+};
+
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };
