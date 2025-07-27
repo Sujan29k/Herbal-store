@@ -18,27 +18,34 @@ export default function UserDashboard() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const router = useRouter();
 
-  // Fetch product data
   useEffect(() => {
     async function fetchProducts() {
       try {
         const res = await fetch("/api/products");
         const data = await res.json();
         setProducts(data);
-      } catch (err) {
+      } catch {
         console.error("Failed to fetch products");
       } finally {
         setLoading(false);
       }
     }
 
-    // Optional: check user login session
     async function checkLogin() {
+      // If user is in guest mode
+      if (
+        typeof window !== "undefined" &&
+        localStorage.getItem("guest") === "true"
+      ) {
+        setIsLoggedIn(false);
+        return;
+      }
+
       try {
-        const res = await fetch("/api/auth/session"); // Update this endpoint based on your auth
+        const res = await fetch("/api/auth/session");
         const data = await res.json();
         setIsLoggedIn(!!data?.user);
-      } catch (err) {
+      } catch {
         setIsLoggedIn(false);
       }
     }
@@ -47,16 +54,11 @@ export default function UserDashboard() {
     checkLogin();
   }, []);
 
-  // Store cart items in localStorage
   const handleAddToCart = (product: Product) => {
-    try {
-      const existingCart = JSON.parse(localStorage.getItem("cart") || "[]");
-      const updatedCart = [...existingCart, product];
-      localStorage.setItem("cart", JSON.stringify(updatedCart));
-      alert(`✅ "${product.name}" added to cart`);
-    } catch (error) {
-      console.error("Error saving to cart", error);
-    }
+    const existingCart = JSON.parse(localStorage.getItem("cart") || "[]");
+    const updatedCart = [...existingCart, product];
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
+    alert(`✅ "${product.name}" added to cart`);
   };
 
   const handleBuyNow = (product: Product) => {
@@ -69,7 +71,7 @@ export default function UserDashboard() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto p-6">
+    <div className="max-w-6xl mx-auto p-6 bg-white">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Explore Herbal Products 🌿</h1>
         <button
