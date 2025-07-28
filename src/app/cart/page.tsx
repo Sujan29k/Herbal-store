@@ -31,8 +31,11 @@ export default function CartPage() {
         const data = await res.json();
         setCartItems(data.items || []);
       } else {
-        const items = JSON.parse(localStorage.getItem("cart") || "[]");
-        setCartItems(items);
+        const localCart = localStorage.getItem("cart");
+        if (localCart) {
+          const parsed = JSON.parse(localCart);
+          setCartItems(parsed);
+        }
       }
       setLoading(false);
     }
@@ -45,8 +48,7 @@ export default function CartPage() {
       const id = item.productId?._id || item._id;
       if (id === productId) {
         const newQty = item.quantity + delta;
-        if (newQty < 1) return { ...item, quantity: 1 }; // Lock at 1
-        return { ...item, quantity: newQty };
+        return { ...item, quantity: newQty < 1 ? 1 : newQty };
       }
       return item;
     });
@@ -88,7 +90,7 @@ export default function CartPage() {
 
   const getTotal = () => {
     return cartItems.reduce((total, item) => {
-      const price = item.productId?.price || item.price || 0;
+      const price = item.productId?.price ?? item.price ?? 0;
       return total + price * item.quantity;
     }, 0);
   };
@@ -108,10 +110,10 @@ export default function CartPage() {
         <div className="space-y-4">
           {cartItems.map((item, index) => {
             const product = item.productId;
-            const name = product?.name || item.name;
-            const price = product?.price || item.price;
-            const image = product?.image || item.image;
-            const id = product?._id || item._id;
+            const name = product?.name ?? item.name ?? "Product";
+            const price = product?.price ?? item.price ?? 0;
+            const image = product?.image ?? item.image ?? "";
+            const id = product?._id ?? item._id ?? "";
 
             return (
               <div
@@ -121,12 +123,11 @@ export default function CartPage() {
                 <div>
                   <h2 className="text-lg font-semibold">{name}</h2>
                   <p>
-                    Price: ₹{price} × {item.quantity} = ₹
-                    {price! * item.quantity}
+                    Price: ₹{price} × {item.quantity} = ₹{price * item.quantity}
                   </p>
                   <div className="flex items-center mt-2 gap-2">
                     <button
-                      onClick={() => handleQuantityChange(id!, -1)}
+                      onClick={() => handleQuantityChange(id, -1)}
                       disabled={item.quantity <= 1}
                       className="px-2 bg-gray-200 rounded disabled:opacity-50"
                     >
@@ -134,7 +135,7 @@ export default function CartPage() {
                     </button>
                     <span>{item.quantity}</span>
                     <button
-                      onClick={() => handleQuantityChange(id!, 1)}
+                      onClick={() => handleQuantityChange(id, 1)}
                       className="px-2 bg-gray-200 rounded"
                     >
                       +
@@ -147,7 +148,7 @@ export default function CartPage() {
                   className="h-16 w-16 object-cover rounded"
                 />
                 <button
-                  onClick={() => handleDelete(id!)}
+                  onClick={() => handleDelete(id)}
                   className="text-red-600 hover:underline"
                 >
                   Remove
