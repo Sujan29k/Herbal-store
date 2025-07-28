@@ -16,13 +16,19 @@ interface Product {
 export default function UserDashboard() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const router = useRouter();
-
   const { data: session } = useSession();
-  const isLoggedIn =
-    session?.user &&
-    typeof window !== "undefined" &&
-    localStorage.getItem("guest") !== "true";
+
+  useEffect(() => {
+    // Calculate login status only on client
+    if (session?.user) {
+      const isGuest = localStorage.getItem("guest") === "true";
+      setIsLoggedIn(!isGuest);
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, [session]);
 
   useEffect(() => {
     async function fetchProducts() {
@@ -36,15 +42,37 @@ export default function UserDashboard() {
         setLoading(false);
       }
     }
-
     fetchProducts();
   }, []);
 
-  const handleAddToCart = (product: Product) => {
-    const existingCart = JSON.parse(localStorage.getItem("cart") || "[]");
-    const updatedCart = [...existingCart, product];
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
-    alert(`✅ "${product.name}" added to cart`);
+  const handleAddToCart = async (product: Product) => {
+    if (isLoggedIn && session?.user?.email) {
+      // Send API request to add product to user's cart in DB
+      try {
+        const res = await fetch("/api/cart", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            productId: product._id,
+            email: session.user.email,
+          }),
+        });
+
+        if (res.ok) {
+          alert(`✅ "${product.name}" added to cart`);
+        } else {
+          alert("❌ Failed to add to cart");
+        }
+      } catch {
+        alert("❌ Network error while adding to cart");
+      }
+    } else {
+      // Guest user → use localStorage
+      const existingCart = JSON.parse(localStorage.getItem("cart") || "[]");
+      const updatedCart = [...existingCart, product];
+      localStorage.setItem("cart", JSON.stringify(updatedCart));
+      alert(`✅ "${product.name}" added to cart`);
+    }
   };
 
   const handleBuyNow = (product: Product) => {
