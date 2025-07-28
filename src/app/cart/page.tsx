@@ -4,13 +4,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 
-interface GuestCartItem {
-  _id: string;
-  name: string;
-  price: number;
-  image: string;
-}
-
 interface CartItem {
   _id?: string;
   productId?: {
@@ -20,7 +13,6 @@ interface CartItem {
     image: string;
   };
   quantity: number;
-  // For guest fallback
   name?: string;
   price?: number;
   image?: string;
@@ -35,25 +27,12 @@ export default function CartPage() {
   useEffect(() => {
     async function fetchCart() {
       if (session?.user) {
-        try {
-          const res = await fetch(`/api/cart?email=${session.user.email}`);
-          const data = await res.json();
-          setCartItems(data.items || []);
-        } catch {
-          console.error("Failed to fetch cart");
-        }
+        const res = await fetch(`/api/cart?email=${session.user.email}`);
+        const data = await res.json();
+        setCartItems(data.items || []);
       } else {
-        const localItems: GuestCartItem[] = JSON.parse(
-          localStorage.getItem("cart") || "[]"
-        );
-        const transformed = localItems.map((item) => ({
-          _id: item._id,
-          name: item.name,
-          price: item.price,
-          image: item.image,
-          quantity: 1,
-        }));
-        setCartItems(transformed);
+        const items = JSON.parse(localStorage.getItem("cart") || "[]");
+        setCartItems(items);
       }
       setLoading(false);
     }
@@ -61,7 +40,40 @@ export default function CartPage() {
     fetchCart();
   }, [session]);
 
+  const handleQuantityChange = async (productId: string, delta: number) => {
+    const updated = cartItems.map((item) => {
+      const id = item.productId?._id || item._id;
+      if (id === productId) {
+        const newQty = item.quantity + delta;
+        if (newQty < 1) return { ...item, quantity: 1 }; // Lock at 1
+        return { ...item, quantity: newQty };
+      }
+      return item;
+    });
+
+    setCartItems(updated);
+
+    if (session?.user) {
+      await fetch("/api/cart", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: session.user.email,
+          productId,
+          quantity: delta,
+        }),
+      });
+    } else {
+      localStorage.setItem("cart", JSON.stringify(updated));
+    }
+  };
+
   const handleDelete = async (productId: string) => {
+    const updated = cartItems.filter(
+      (item) => (item.productId?._id || item._id) !== productId
+    );
+    setCartItems(updated);
+
     if (session?.user) {
       await fetch(
         `/api/cart?email=${session.user.email}&productId=${productId}`,
@@ -69,14 +81,16 @@ export default function CartPage() {
           method: "DELETE",
         }
       );
-      setCartItems((prev) =>
-        prev.filter((item) => item.productId?._id !== productId)
-      );
     } else {
-      const updated = cartItems.filter((item) => item._id !== productId);
       localStorage.setItem("cart", JSON.stringify(updated));
-      setCartItems(updated);
     }
+  };
+
+  const getTotal = () => {
+    return cartItems.reduce((total, item) => {
+      const price = item.productId?.price || item.price || 0;
+      return total + price * item.quantity;
+    }, 0);
   };
 
   const handleProceedToBuy = () => {
@@ -106,7 +120,26 @@ export default function CartPage() {
               >
                 <div>
                   <h2 className="text-lg font-semibold">{name}</h2>
-                  <p>Price: ₹{price}</p>
+                  <p>
+                    Price: ₹{price} × {item.quantity} = ₹
+                    {price! * item.quantity}
+                  </p>
+                  <div className="flex items-center mt-2 gap-2">
+                    <button
+                      onClick={() => handleQuantityChange(id!, -1)}
+                      disabled={item.quantity <= 1}
+                      className="px-2 bg-gray-200 rounded disabled:opacity-50"
+                    >
+                      −
+                    </button>
+                    <span>{item.quantity}</span>
+                    <button
+                      onClick={() => handleQuantityChange(id!, 1)}
+                      className="px-2 bg-gray-200 rounded"
+                    >
+                      +
+                    </button>
+                  </div>
                 </div>
                 <img
                   src={image}
@@ -122,12 +155,14 @@ export default function CartPage() {
               </div>
             );
           })}
+          <div className="text-right font-bold text-xl mt-4">
+            Total: ₹{getTotal()}
+          </div>
           <button
             onClick={handleProceedToBuy}
             className="mt-6 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
           >
-            Proceed to Buy ({cartItems.length} item{cartItems.length > 1 && "s"}
-            )
+            Proceed to Buy
           </button>
         </div>
       )}

@@ -11,6 +11,7 @@ interface Product {
   description: string;
   price: number;
   image: string;
+  quantity?: number; // ✅ Fix: optional quantity for local cart use
 }
 
 export default function UserDashboard() {
@@ -21,7 +22,6 @@ export default function UserDashboard() {
   const { data: session } = useSession();
 
   useEffect(() => {
-    // Calculate login status only on client
     if (session?.user) {
       const isGuest = localStorage.getItem("guest") === "true";
       setIsLoggedIn(!isGuest);
@@ -47,30 +47,31 @@ export default function UserDashboard() {
 
   const handleAddToCart = async (product: Product) => {
     if (isLoggedIn && session?.user?.email) {
-      // Send API request to add product to user's cart in DB
       try {
-        const res = await fetch("/api/cart", {
+        await fetch("/api/cart", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             productId: product._id,
             email: session.user.email,
+            quantity: 1,
           }),
         });
-
-        if (res.ok) {
-          alert(`✅ "${product.name}" added to cart`);
-        } else {
-          alert("❌ Failed to add to cart");
-        }
+        alert(`✅ "${product.name}" added to cart`);
       } catch {
-        alert("❌ Network error while adding to cart");
+        alert("❌ Failed to add to cart");
       }
     } else {
-      // Guest user → use localStorage
       const existingCart = JSON.parse(localStorage.getItem("cart") || "[]");
-      const updatedCart = [...existingCart, product];
-      localStorage.setItem("cart", JSON.stringify(updatedCart));
+      const index = existingCart.findIndex((item: Product) => item._id === product._id);
+
+      if (index > -1) {
+        existingCart[index].quantity = (existingCart[index].quantity || 1) + 1;
+      } else {
+        existingCart.push({ ...product, quantity: 1 });
+      }
+
+      localStorage.setItem("cart", JSON.stringify(existingCart));
       alert(`✅ "${product.name}" added to cart`);
     }
   };
