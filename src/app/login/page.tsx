@@ -37,12 +37,13 @@ export default function LoginPage() {
       <div className={styles.authCard}>
         <div className={styles.leftPane}>
           <Image src="/herbal.avif" alt="study" width={300} height={300} />
-          <h2>Exam Mastery Hub</h2>
-          <p>Log in to continue your learning journey.</p>
+          <h2>Herbal Store</h2>
+          <p>Log in to continue shopping.</p>
         </div>
 
         <div className={styles.rightPane}>
-          <div className={styles.logo}>MASTERY HUB</div>
+          <div className={styles.logo}>HERBAL STORE</div>
+
           <input
             type="email"
             placeholder="Email"
@@ -68,7 +69,12 @@ export default function LoginPage() {
             Continue as Guest
           </button>
 
-          <button className={styles.googleBtn}>
+          <button
+            onClick={() =>
+              signIn("google", { callbackUrl: "/dashboard" })
+            }
+            className={styles.googleBtn}
+          >
             <Image src="/google.png" alt="Google" width={20} height={20} />
             Sign in with Google
           </button>

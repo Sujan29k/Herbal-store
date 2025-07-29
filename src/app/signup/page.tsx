@@ -1,7 +1,9 @@
 "use client";
+
 import styles from "@/styles/Auth.module.css";
 import Image from "next/image";
 import Link from "next/link";
+import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -32,12 +34,13 @@ export default function SignupPage() {
       <div className={styles.authCard}>
         <div className={styles.leftPane}>
           <Image src="/herbal.avif" alt="study" width={300} height={300} />
-          <h2>Exam Mastery Hub</h2>
-          <p>Create your account and start mastering exams.</p>
+          <h2>Herbal Store</h2>
+          <p>Create your account to start shopping.</p>
         </div>
 
         <div className={styles.rightPane}>
-          <div className={styles.logo}>MASTERY HUB</div>
+          <div className={styles.logo}>HERBAL STORE</div>
+
           <input
             type="text"
             placeholder="Full Name"
@@ -62,10 +65,17 @@ export default function SignupPage() {
           <button className={styles.button} onClick={handleSignup}>
             Create Account
           </button>
-          <button className={styles.googleBtn}>
+
+          <button
+            onClick={() =>
+              signIn("google", { callbackUrl: "/dashboard" })
+            }
+            className={styles.googleBtn}
+          >
             <Image src="/google.png" alt="Google" width={20} height={20} />
             Sign up with Google
           </button>
+
           <div className={styles.altText}>
             Already have an account? <Link href="/login">Sign in</Link>
           </div>

@@ -1,4 +1,3 @@
-// src/models/User.ts
 import mongoose from "mongoose";
 
 const UserSchema = new mongoose.Schema({
@@ -12,8 +11,14 @@ const UserSchema = new mongoose.Schema({
     unique: true,
   },
   password: {
-    type: String, // hashed password in real apps
-    required: true,
+    type: String,
+    required: function () {
+      return !(this as any).isOAuth;
+    },
+  },
+  isOAuth: {
+    type: Boolean,
+    default: false,
   },
   role: {
     type: String,
