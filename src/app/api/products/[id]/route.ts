@@ -9,7 +9,8 @@ export async function GET(
   await connectDB();
 
   try {
-    const product = await Product.findById(params.id);
+    const { id } = await params; // ✅ Must await params
+    const product = await Product.findById(id);
 
     if (!product) {
       return NextResponse.json(

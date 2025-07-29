@@ -26,28 +26,20 @@ export default function CheckoutPage() {
     address: "",
   });
 
-  // Fetch products either for "Buy Now" or "Cart" flow
   useEffect(() => {
     const fetchCartProducts = async () => {
       const productId = searchParams.get("productId");
 
-      // -----------------------
       // BUY NOW FLOW
-      // -----------------------
       if (productId) {
         const res = await fetch(`/api/products/${productId}`);
         const product = await res.json();
-
-        // Default quantity = 1 for Buy Now
         setProducts([{ ...product, quantity: 1 }]);
         return;
       }
 
-      // -----------------------
       // CART FLOW
-      // -----------------------
       if (session?.user) {
-        // Fetch cart items for logged-in users
         const res = await fetch(`/api/cart?email=${session.user.email}`);
         const data = await res.json();
 
@@ -63,9 +55,7 @@ export default function CheckoutPage() {
         const productList = await Promise.all(productPromises);
         setProducts(productList);
       } else {
-        // Guest: use localStorage cart
         const cartItems = JSON.parse(localStorage.getItem("cart") || "[]");
-
         const productPromises = cartItems.map(async (item: any) => {
           const res = await fetch(`/api/products/${item._id}`);
           const product = await res.json();
@@ -89,11 +79,21 @@ export default function CheckoutPage() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  const validateForm = () => {
+    if (!form.name || !form.email || !form.phone || !form.address) {
+      alert("Please fill in all shipping details before confirming purchase.");
+      return false;
+    }
+    return true;
+  };
+
   const handleConfirmPurchase = async () => {
     if (!session) {
       alert("Please log in to complete your purchase.");
       return;
     }
+
+    if (!validateForm()) return;
 
     try {
       const res = await fetch("/api/order", {

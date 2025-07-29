@@ -10,6 +10,35 @@ interface Product {
   image: string;
 }
 
+interface PopulatedProduct {
+  _id: string;
+  name: string;
+  price: number;
+  image: string;
+}
+
+interface OrderItem {
+  productId: PopulatedProduct; // populated data
+  quantity: number;
+}
+
+interface ShippingDetails {
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+}
+
+interface Order {
+  _id: string;
+  userId: { email: string };
+  items: OrderItem[];
+  totalAmount: number;
+  shippingDetails: ShippingDetails;
+  status: string;
+  createdAt: string;
+}
+
 export default function AdminPanel() {
   const [form, setForm] = useState({
     name: "",
@@ -19,16 +48,24 @@ export default function AdminPanel() {
   });
 
   const [products, setProducts] = useState<Product[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchProducts();
+    fetchOrders();
   }, []);
 
   async function fetchProducts() {
     const res = await fetch("/api/products");
     const data = await res.json();
     setProducts(data);
+  }
+
+  async function fetchOrders() {
+    const res = await fetch("/api/admin/orders");
+    const data = await res.json();
+    setOrders(data);
   }
 
   function handleChange(
@@ -77,9 +114,10 @@ export default function AdminPanel() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className="max-w-5xl mx-auto p-6">
       <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
 
+      {/* Add Product Form */}
       <form onSubmit={handleSubmit} className="space-y-4 mb-10">
         <input
           type="text"
@@ -122,8 +160,9 @@ export default function AdminPanel() {
         </button>
       </form>
 
+      {/* Products */}
       <h2 className="text-xl font-semibold mb-4">Product List</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-12">
         {products.map((product) => (
           <div
             key={product._id}
@@ -138,6 +177,42 @@ export default function AdminPanel() {
             <p className="text-gray-700">{product.description}</p>
             <p className="text-green-700 font-semibold mt-1">
               Rs. {product.price}
+            </p>
+          </div>
+        ))}
+      </div>
+
+      {/* Orders */}
+      <h2 className="text-xl font-semibold mb-4">Recent Orders</h2>
+      <div className="space-y-4">
+        {orders.map((order) => (
+          <div key={order._id} className="border rounded p-4 shadow">
+            <p>
+              <strong>User:</strong> {order.userId?.email || "Unknown"}
+            </p>
+            <p>
+              <strong>Status:</strong> {order.status}
+            </p>
+            <p>
+              <strong>Total:</strong> Rs. {order.totalAmount}
+            </p>
+            <p>
+              <strong>Shipping:</strong>{" "}
+              {`${order.shippingDetails.name || ""}, ${
+                order.shippingDetails.phone || ""
+              }, ${order.shippingDetails.address || ""}`}
+            </p>
+            <p className="font-semibold mt-2">Items:</p>
+            <ul className="list-disc pl-5">
+              {order.items.map((item, idx) => (
+                <li key={idx}>
+                  {item.productId?.name || "Unknown Product"} × {item.quantity}{" "}
+                  (Rs. {item.productId?.price})
+                </li>
+              ))}
+            </ul>
+            <p className="text-sm text-gray-500 mt-2">
+              Ordered on {new Date(order.createdAt).toLocaleString()}
             </p>
           </div>
         ))}

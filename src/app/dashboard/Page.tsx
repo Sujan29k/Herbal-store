@@ -63,7 +63,9 @@ export default function UserDashboard() {
       }
     } else {
       const existingCart = JSON.parse(localStorage.getItem("cart") || "[]");
-      const index = existingCart.findIndex((item: Product) => item._id === product._id);
+      const index = existingCart.findIndex(
+        (item: Product) => item._id === product._id
+      );
 
       if (index > -1) {
         existingCart[index].quantity = (existingCart[index].quantity || 1) + 1;

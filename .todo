@@ -1,10 +1,10 @@
 # backend
 
-[] User athentication(bholi)
-[] cart lai database ma store garne gari banaune 
+[x] User athentication(bholi)
+[x] cart lai database ma store garne gari banaune 
 [] user le checkout garda garn parne sab details halne 
 [] email verification
-[] guest login 
+[x] guest login 
 [] admin dashboard ma chahi admin nabhai janai namile banauna pareo
 
 
