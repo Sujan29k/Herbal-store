@@ -11,7 +11,7 @@ interface Product {
   description: string;
   price: number;
   image: string;
-  quantity?: number; // ✅ Fix: optional quantity for local cart use
+  quantity?: number;
 }
 
 export default function UserDashboard() {
@@ -48,7 +48,7 @@ export default function UserDashboard() {
   const handleAddToCart = async (product: Product) => {
     if (isLoggedIn && session?.user?.email) {
       try {
-        await fetch("/api/cart", {
+        const res = await fetch("/api/cart", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -57,8 +57,17 @@ export default function UserDashboard() {
             quantity: 1,
           }),
         });
+
+        const data = await res.json();
+        if (!res.ok) {
+          console.error("Error adding to cart:", data);
+          alert("❌ Failed to add to cart: " + data.error);
+          return;
+        }
+
         alert(`✅ "${product.name}" added to cart`);
-      } catch {
+      } catch (err) {
+        console.error("Error adding to cart:", err);
         alert("❌ Failed to add to cart");
       }
     } else {

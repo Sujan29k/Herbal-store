@@ -2,11 +2,11 @@
 
 [x] User athentication(bholi)
 [x] cart lai database ma store garne gari banaune 
-[] user le checkout garda garn parne sab details halne 
+[x] user le checkout garda garn parne sab details halne 
 [] email verification
 [x] guest login 
-[] admin dashboard ma chahi admin nabhai janai namile banauna pareo
-
+[x] admin dashboard ma chahi admin nabhai janai namile banauna pareo
+[] google bata login garne option banauna pareo 
 
 
 #frontend

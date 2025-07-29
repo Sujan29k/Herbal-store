@@ -1,5 +1,4 @@
 // /app/api/cart/route.ts
-
 import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongoose";
 import Cart from "@/models/Cart";
@@ -10,12 +9,15 @@ export async function POST(req: NextRequest) {
   await connectDB();
   const { email, productId, quantity } = await req.json();
 
+  console.log("POST /api/cart ->", { email, productId, quantity });
+
   if (!email || !productId || typeof quantity !== "number") {
     return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
   }
 
   const user = await User.findOne({ email });
   if (!user) {
+    console.log("User not found for email:", email);
     return NextResponse.json({ error: "User not found" }, { status: 404 });
   }
 
@@ -32,6 +34,7 @@ export async function POST(req: NextRequest) {
       items: [{ productId, quantity: quantity > 0 ? quantity : 1 }],
     });
 
+    console.log("Cart created:", cart);
     return NextResponse.json({ message: "Cart created", cart });
   }
 
@@ -41,25 +44,24 @@ export async function POST(req: NextRequest) {
 
   if (existingItem) {
     const newQty = existingItem.quantity + quantity;
+    console.log("Updating existing item qty:", newQty);
 
     if (newQty < 1) {
       cart.items = cart.items.filter(
         (item: any) => item.productId.toString() !== productId
       );
     } else {
-      cart.items = cart.items.map((item: any) =>
-        item.productId.toString() === productId
-          ? { ...item.toObject(), quantity: newQty }
-          : item
-      );
+      existingItem.quantity = newQty;
     }
   } else if (quantity > 0) {
+    console.log("Adding new item to cart");
     cart.items.push({ productId, quantity });
   }
 
   cart.markModified("items");
   await cart.save();
 
+  console.log("Cart updated:", cart);
   return NextResponse.json({ message: "Cart updated", cart });
 }
 
@@ -67,6 +69,8 @@ export async function GET(req: NextRequest) {
   await connectDB();
 
   const email = req.nextUrl.searchParams.get("email");
+  console.log("GET /api/cart for email:", email);
+
   if (!email)
     return NextResponse.json({ error: "Missing email" }, { status: 400 });
 
@@ -76,5 +80,6 @@ export async function GET(req: NextRequest) {
 
   const cart = await Cart.findOne({ userId: user._id }).populate("items.productId");
 
+  console.log("Fetched cart:", cart);
   return NextResponse.json({ items: cart?.items || [] });
 }

@@ -24,25 +24,36 @@ export default function CartPage() {
   const { data: session } = useSession();
   const router = useRouter();
 
+  // Fetch cart on page load or when session changes
   useEffect(() => {
     async function fetchCart() {
-      if (session?.user) {
-        const res = await fetch(`/api/cart?email=${session.user.email}`);
-        const data = await res.json();
-        setCartItems(data.items || []);
-      } else {
-        const localCart = localStorage.getItem("cart");
-        if (localCart) {
-          const parsed = JSON.parse(localCart);
-          setCartItems(parsed);
+      try {
+        if (session?.user) {
+          // Logged-in user: fetch from DB
+          const res = await fetch(`/api/cart?email=${session.user.email}`);
+          const data = await res.json();
+          console.log("Fetched DB cart:", data);
+          setCartItems(data.items || []);
+        } else {
+          // Guest: fetch from localStorage
+          const localCart = localStorage.getItem("cart");
+          if (localCart) {
+            const parsed = JSON.parse(localCart);
+            console.log("Fetched local cart:", parsed);
+            setCartItems(parsed);
+          }
         }
+      } catch (error) {
+        console.error("Error fetching cart:", error);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     }
 
     fetchCart();
   }, [session]);
 
+  // Change quantity of an item
   const handleQuantityChange = async (productId: string, delta: number) => {
     const updated = cartItems.map((item) => {
       const id = item.productId?._id || item._id;
@@ -56,6 +67,7 @@ export default function CartPage() {
     setCartItems(updated);
 
     if (session?.user) {
+      // Update in DB
       await fetch("/api/cart", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -66,10 +78,12 @@ export default function CartPage() {
         }),
       });
     } else {
+      // Update in localStorage
       localStorage.setItem("cart", JSON.stringify(updated));
     }
   };
 
+  // Delete an item from cart
   const handleDelete = async (productId: string) => {
     const updated = cartItems.filter(
       (item) => (item.productId?._id || item._id) !== productId
@@ -77,17 +91,18 @@ export default function CartPage() {
     setCartItems(updated);
 
     if (session?.user) {
+      // Remove from DB
       await fetch(
         `/api/cart?email=${session.user.email}&productId=${productId}`,
-        {
-          method: "DELETE",
-        }
+        { method: "DELETE" }
       );
     } else {
+      // Remove from localStorage
       localStorage.setItem("cart", JSON.stringify(updated));
     }
   };
 
+  // Compute total cost
   const getTotal = () => {
     return cartItems.reduce((total, item) => {
       const price = item.productId?.price ?? item.price ?? 0;
@@ -95,6 +110,7 @@ export default function CartPage() {
     }, 0);
   };
 
+  // Proceed to checkout
   const handleProceedToBuy = () => {
     router.push("/checkout");
   };
@@ -102,6 +118,7 @@ export default function CartPage() {
   return (
     <div className="max-w-4xl mx-auto p-6">
       <h1 className="text-2xl font-bold mb-4">🛒 Your Cart</h1>
+
       {loading ? (
         <p>Loading...</p>
       ) : cartItems.length === 0 ? (
@@ -123,7 +140,8 @@ export default function CartPage() {
                 <div>
                   <h2 className="text-lg font-semibold">{name}</h2>
                   <p>
-                    Price: ₹{price} × {item.quantity} = ₹{price * item.quantity}
+                    Price: ₹{price} × {item.quantity} = ₹
+                    {price * item.quantity}
                   </p>
                   <div className="flex items-center mt-2 gap-2">
                     <button
@@ -142,6 +160,7 @@ export default function CartPage() {
                     </button>
                   </div>
                 </div>
+
                 <img
                   src={image}
                   alt={name}
@@ -156,9 +175,11 @@ export default function CartPage() {
               </div>
             );
           })}
+
           <div className="text-right font-bold text-xl mt-4">
             Total: ₹{getTotal()}
           </div>
+
           <button
             onClick={handleProceedToBuy}
             className="mt-6 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
