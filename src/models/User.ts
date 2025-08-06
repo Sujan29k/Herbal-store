@@ -12,8 +12,8 @@ const UserSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: function () {
-      return !(this as any).isOAuth;
+    required: function (this: { isOAuth?: boolean }) {
+      return !this.isOAuth;
     },
   },
   isOAuth: {

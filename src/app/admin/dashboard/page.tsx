@@ -1,6 +1,6 @@
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth";
 import AdminPanel from "./AdminPanel"; // we’ll create this file
 
 export default async function AdminDashboardPage() {

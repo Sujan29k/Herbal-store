@@ -1,12 +1,11 @@
 import FooterMain from "./FooterMain";
 import FooterBottom from "./FooterBottom";
-import "@/styles/Footer.css";
 
 export default function Footer() {
   return (
-    <div className="footer-wrapper">
+    <footer className="bg-gradient-to-b from-green-50 to-white">
       <FooterMain />
       <FooterBottom />
-    </div>
+    </footer>
   );
 }

@@ -38,8 +38,13 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ message: "Cart created", cart });
   }
 
+  interface CartItem {
+    productId: string;
+    quantity: number;
+  }
+
   const existingItem = cart.items.find(
-    (item: any) => item.productId.toString() === productId
+    (item: CartItem) => item.productId.toString() === productId
   );
 
   if (existingItem) {
@@ -48,7 +53,7 @@ export async function POST(req: NextRequest) {
 
     if (newQty < 1) {
       cart.items = cart.items.filter(
-        (item: any) => item.productId.toString() !== productId
+        (item: CartItem) => item.productId.toString() !== productId
       );
     } else {
       existingItem.quantity = newQty;
@@ -78,7 +83,9 @@ export async function GET(req: NextRequest) {
   if (!user)
     return NextResponse.json({ error: "User not found" }, { status: 404 });
 
-  const cart = await Cart.findOne({ userId: user._id }).populate("items.productId");
+  const cart = await Cart.findOne({ userId: user._id }).populate(
+    "items.productId"
+  );
 
   console.log("Fetched cart:", cart);
   return NextResponse.json({ items: cart?.items || [] });

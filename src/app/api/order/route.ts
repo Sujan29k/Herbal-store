@@ -8,18 +8,27 @@ export async function POST(req: NextRequest) {
   try {
     await connectDB();
     const body = await req.json();
-    const { email, items, totalAmount, shippingDetails } = body;
+    const { email, items, totalAmount, shippingDetails, isGuest } = body;
 
     if (!email || !items?.length || !totalAmount || !shippingDetails) {
       return NextResponse.json({ error: "Missing fields" }, { status: 400 });
     }
 
-    const user = await User.findOne({ email });
-    if (!user)
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    let userId = null;
+
+    // For registered users, find the user and use their ID
+    if (!isGuest) {
+      const user = await User.findOne({ email });
+      if (!user) {
+        return NextResponse.json({ error: "User not found" }, { status: 404 });
+      }
+      userId = user._id;
+    }
+    // For guest users, we'll create the order without a userId
 
     const newOrder = await Order.create({
-      userId: user._id,
+      userId: userId, // null for guest users
+      guestEmail: isGuest ? email : undefined, // Store guest email separately
       items,
       totalAmount,
       shippingDetails,
@@ -36,9 +45,14 @@ export async function POST(req: NextRequest) {
       },
     });
 
+    interface OrderItem {
+      productId: string;
+      quantity: number;
+    }
+
     const itemList = items
       .map(
-        (it: any) =>
+        (it: OrderItem) =>
           `<li>Product ID: ${it.productId}, Quantity: ${it.quantity}</li>`
       )
       .join("");
@@ -49,9 +63,13 @@ export async function POST(req: NextRequest) {
       subject: "New Order Placed",
       html: `
         <h2>New Order Received</h2>
-        <p><strong>User:</strong> ${email}</p>
+        <p><strong>Customer:</strong> ${email} ${
+        isGuest ? "(Guest User)" : "(Registered User)"
+      }</p>
         <p><strong>Total:</strong> Rs. ${totalAmount}</p>
-        <p><strong>Shipping:</strong> ${shippingDetails.name}, ${shippingDetails.phone}, ${shippingDetails.address}</p>
+        <p><strong>Shipping:</strong> ${shippingDetails.name}, ${
+        shippingDetails.phone
+      }, ${shippingDetails.address}</p>
         <h3>Items:</h3>
         <ul>${itemList}</ul>
         <p><small>Order ID: ${newOrder._id}</small></p>

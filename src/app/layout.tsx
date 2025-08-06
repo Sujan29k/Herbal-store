@@ -6,15 +6,29 @@ import Footer from "@/components/Footer";
 import { usePathname } from "next/navigation";
 import "./globals.css";
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const pathname = usePathname();
-  const noLayoutRoutes = ["/login", "/signup"]; // routes without Navbar/Footer
+  const noLayoutRoutes = [
+    "/login",
+    "/signup",
+    "/thankyou",
+    "/cart",
+    "/checkout",
+  ]; // routes without Navbar/Footer
   const hideLayout = noLayoutRoutes.includes(pathname);
 
   return (
     <html lang="en">
       <body className="bg-white text-black">
-        <SessionProvider>
+        <SessionProvider
+          basePath="/api/auth"
+          refetchInterval={5 * 60} // Refetch session every 5 minutes
+          refetchOnWindowFocus={true}
+        >
           <div className="layout">
             {!hideLayout && <Navbar />}
             <main className="main-content">{children}</main>

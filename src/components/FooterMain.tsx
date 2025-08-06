@@ -1,66 +1,158 @@
 import React from "react";
-import "@/styles/Footer.css";
-import { FaFacebook, FaInstagram, FaTwitter, FaWhatsapp } from "react-icons/fa";
+import {
+  FaFacebook,
+  FaInstagram,
+  FaTwitter,
+  FaWhatsapp,
+  FaLeaf,
+} from "react-icons/fa";
 
 export default function FooterMain() {
   return (
-    <div className="footer-main">
-      <div className="footer-columns">
+    <div className="max-w-7xl mx-auto px-4 py-16 lg:py-20">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+        {/* Brand Section */}
+        <div className="lg:col-span-1">
+          <div className="flex items-center space-x-2 mb-6">
+            <div className="p-2 bg-gradient-to-r from-green-600 to-lime-600 rounded-xl">
+              <FaLeaf className="text-white text-xl" />
+            </div>
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-green-600 to-lime-600 bg-clip-text text-transparent">
+              Herbal Store
+            </h2>
+          </div>
+          <p className="text-gray-600 mb-6 leading-relaxed">
+            Your trusted source for natural herbal products and traditional
+            remedies. Promoting wellness through nature&apos;s finest
+            ingredients.
+          </p>
+          <div className="flex space-x-4">
+            <a
+              href="#"
+              aria-label="Facebook"
+              className="p-3 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-xl transition-all duration-200 hover:shadow-md hover:scale-110"
+            >
+              <FaFacebook className="text-xl" />
+            </a>
+            <a
+              href="#"
+              aria-label="Instagram"
+              className="p-3 bg-pink-50 hover:bg-pink-100 text-pink-600 rounded-xl transition-all duration-200 hover:shadow-md hover:scale-110"
+            >
+              <FaInstagram className="text-xl" />
+            </a>
+            <a
+              href="#"
+              aria-label="Twitter"
+              className="p-3 bg-blue-50 hover:bg-blue-100 text-blue-400 rounded-xl transition-all duration-200 hover:shadow-md hover:scale-110"
+            >
+              <FaTwitter className="text-xl" />
+            </a>
+            <a
+              href="#"
+              aria-label="WhatsApp"
+              className="p-3 bg-green-50 hover:bg-green-100 text-green-600 rounded-xl transition-all duration-200 hover:shadow-md hover:scale-110"
+            >
+              <FaWhatsapp className="text-xl" />
+            </a>
+          </div>
+        </div>
+
+        {/* Quick Links */}
         <div>
-          <h3 className="text-black">Library</h3>
-          <ul>
+          <h3 className="text-lg font-bold text-gray-900 mb-6">Quick Links</h3>
+          <ul className="space-y-3">
             <li>
-              <a href="#">About</a>
+              <a
+                href="#"
+                className="text-gray-600 hover:text-emerald-600 transition-colors duration-200 hover:pl-2"
+              >
+                Home
+              </a>
             </li>
             <li>
-              <a href="#">FAQs</a>
+              <a
+                href="#"
+                className="text-gray-600 hover:text-emerald-600 transition-colors duration-200 hover:pl-2"
+              >
+                Our Products
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                className="text-gray-600 hover:text-emerald-600 transition-colors duration-200 hover:pl-2"
+              >
+                About Us
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                className="text-gray-600 hover:text-emerald-600 transition-colors duration-200 hover:pl-2"
+              >
+                FAQs
+              </a>
             </li>
           </ul>
         </div>
+
+        {/* Support */}
         <div>
-          <h3 className="text-black">Quick Links</h3>
-          <ul>
+          <h3 className="text-lg font-bold text-gray-900 mb-6">Support</h3>
+          <ul className="space-y-3">
             <li>
-              <a href="#">Home</a>
+              <a
+                href="#"
+                className="text-gray-600 hover:text-emerald-600 transition-colors duration-200 hover:pl-2"
+              >
+                Customer Service
+              </a>
             </li>
             <li>
-              <a href="#">Feedback Form</a>
+              <a
+                href="#"
+                className="text-gray-600 hover:text-emerald-600 transition-colors duration-200 hover:pl-2"
+              >
+                Shipping Info
+              </a>
             </li>
             <li>
-              <a href="#">Our Products</a>
+              <a
+                href="#"
+                className="text-gray-600 hover:text-emerald-600 transition-colors duration-200 hover:pl-2"
+              >
+                Returns
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                className="text-gray-600 hover:text-emerald-600 transition-colors duration-200 hover:pl-2"
+              >
+                Feedback Form
+              </a>
             </li>
           </ul>
         </div>
+
+        {/* Contact Info */}
         <div>
-          <h3 className="text-black">Contact Us</h3>
-          <p>
-            <strong>Herbal Store</strong>
-            <br />
-            Herbal Store
-          </p>
-          <p>
-            <strong>Location:</strong> Kalikanagar, Butwal
-          </p>
-          <p>
-            <strong>Tel.:</strong> 061-470457, 470463
-          </p>
-          <p>
-            <strong>E-mail:</strong> pramod123abcdz@gmail.com
-          </p>
-        </div>
-        <div className="social-icons">
-          <a href="#" aria-label="Facebook" className="text-blue-600 text-2xl">
-            <FaFacebook />
-          </a>
-          <a href="#" aria-label="Instagram" className="text-pink-500 text-2xl">
-            <FaInstagram />
-          </a>
-          <a href="#" aria-label="Twitter" className="text-blue-400 text-2xl">
-            <FaTwitter />
-          </a>
-          <a href="#" aria-label="WhatsApp" className="text-green-500 text-2xl">
-            <FaWhatsapp />
-          </a>
+          <h3 className="text-lg font-bold text-gray-900 mb-6">Contact Info</h3>
+          <div className="space-y-4">
+            <div className="bg-white p-4 rounded-xl border border-emerald-100 shadow-sm">
+              <p className="font-semibold text-emerald-700 mb-1">Location</p>
+              <p className="text-gray-600 text-sm">Kalikanagar, Butwal</p>
+            </div>
+            <div className="bg-white p-4 rounded-xl border border-emerald-100 shadow-sm">
+              <p className="font-semibold text-emerald-700 mb-1">Phone</p>
+              <p className="text-gray-600 text-sm">061-470457, 470463</p>
+            </div>
+            <div className="bg-white p-4 rounded-xl border border-emerald-100 shadow-sm">
+              <p className="font-semibold text-emerald-700 mb-1">Email</p>
+              <p className="text-gray-600 text-sm">pramod123abcdz@gmail.com</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
