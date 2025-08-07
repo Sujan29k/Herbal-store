@@ -1,11 +1,6 @@
 import React from "react";
-import {
-  FaFacebook,
-  FaInstagram,
-  FaTwitter,
-  FaWhatsapp,
-  FaLeaf,
-} from "react-icons/fa";
+import { FaFacebook, FaInstagram, FaTwitter, FaWhatsapp } from "react-icons/fa";
+import Image from "next/image";
 
 export default function FooterMain() {
   return (
@@ -13,18 +8,19 @@ export default function FooterMain() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
         {/* Brand Section */}
         <div className="lg:col-span-1">
-          <div className="flex items-center space-x-2 mb-6">
-            <div className="p-2 bg-gradient-to-r from-green-600 to-lime-600 rounded-xl">
-              <FaLeaf className="text-white text-xl" />
-            </div>
-            <h2 className="text-2xl font-bold bg-gradient-to-r from-green-600 to-lime-600 bg-clip-text text-transparent">
-              Herbal Store
-            </h2>
+          <div className="mb-6">
+            <Image
+              src="/jadimart.png"
+              alt="Jadimart Logo"
+              width={200}
+              height={60}
+              className="h-14 w-auto"
+            />
           </div>
           <p className="text-gray-600 mb-6 leading-relaxed">
             Your trusted source for natural herbal products and traditional
-            remedies. Promoting wellness through nature&apos;s finest
-            ingredients.
+            remedies from Jadimart. Promoting wellness through nature&apos;s
+            finest ingredients.
           </p>
           <div className="flex space-x-4">
             <a

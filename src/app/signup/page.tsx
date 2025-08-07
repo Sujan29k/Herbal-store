@@ -5,14 +5,7 @@ import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  FaLeaf,
-  FaEye,
-  FaEyeSlash,
-  FaUserPlus,
-  FaStar,
-  FaGift,
-} from "react-icons/fa";
+import { FaEye, FaEyeSlash, FaUserPlus, FaStar, FaGift } from "react-icons/fa";
 
 export default function SignupPage() {
   const [name, setName] = useState("");
@@ -96,14 +89,14 @@ export default function SignupPage() {
           {/* Right Pane */}
           <div className="lg:w-1/2 p-8 lg:p-12">
             <div className="flex items-center justify-center mb-8">
-              <div className="flex items-center space-x-3">
-                <div className="p-3 bg-gradient-to-r from-emerald-600 to-green-600 rounded-xl">
-                  <FaLeaf className="text-white text-2xl" />
-                </div>
-                <h1 className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-emerald-600 to-green-600 bg-clip-text text-transparent">
-                  HERBAL STORE
-                </h1>
-              </div>
+              <Image
+                src="/jadimart.png"
+                alt="Jadimart Logo"
+                width={240}
+                height={72}
+                className="h-16 w-auto"
+                priority
+              />
             </div>
 
             <div className="space-y-6">

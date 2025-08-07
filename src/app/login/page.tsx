@@ -48,13 +48,15 @@ export default function LoginPage() {
       <div className="w-full max-w-6xl">
         {/* Header Section */}
         <div className="text-center mb-8">
-          <div className="flex items-center justify-center space-x-3 mb-4">
-            <div className="p-3 bg-gradient-to-r from-green-400 to-lime-500 rounded-2xl shadow-lg">
-              <FaLeaf className="text-white text-3xl" />
-            </div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-green-600 to-lime-600 bg-clip-text text-transparent">
-              Herbal Store
-            </h1>
+          <div className="flex items-center justify-center mb-4">
+            <Image
+              src="/jadimart.png"
+              alt="Jadimart Logo"
+              width={280}
+              height={84}
+              className="h-16 w-auto"
+              priority
+            />
           </div>
           <p className="text-gray-600 text-lg">
             Choose how you&apos;d like to continue

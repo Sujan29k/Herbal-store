@@ -1,12 +1,16 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { FaLeaf, FaShieldAlt, FaTruck, FaStar } from "react-icons/fa";
+import TestimonialsModal from "../components/TestimonialsModal";
+import LearnMoreModal from "../components/LearnMoreModal";
 
 const HeroSection: React.FC = () => {
   const router = useRouter();
+  const [isTestimonialsOpen, setIsTestimonialsOpen] = useState(false);
+  const [isLearnMoreOpen, setIsLearnMoreOpen] = useState(false);
 
   const handleExplore = () => {
     localStorage.removeItem("guest");
@@ -57,7 +61,10 @@ const HeroSection: React.FC = () => {
               >
                 Explore Products
               </button>
-              <button className="border-2 border-emerald-600 text-emerald-700 hover:bg-emerald-600 hover:text-white px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 backdrop-blur-sm bg-white/80 shadow-lg hover:shadow-xl">
+              <button
+                onClick={() => setIsLearnMoreOpen(true)}
+                className="border-2 border-emerald-600 text-emerald-700 hover:bg-emerald-600 hover:text-white px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 backdrop-blur-sm bg-white/80 shadow-lg hover:shadow-xl"
+              >
                 Learn More
               </button>
             </div>
@@ -194,13 +201,26 @@ const HeroSection: React.FC = () => {
               >
                 Start Shopping Now
               </button>
-              <button className="border-2 border-white/30 text-white hover:bg-white/10 px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 backdrop-blur-sm">
+              <button
+                onClick={() => setIsTestimonialsOpen(true)}
+                className="border-2 border-white/30 text-white hover:bg-white/10 px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 backdrop-blur-sm"
+              >
                 View Testimonials
               </button>
             </div>
           </div>
         </div>
       </section>
+
+      {/* Modals */}
+      <TestimonialsModal
+        isOpen={isTestimonialsOpen}
+        onClose={() => setIsTestimonialsOpen(false)}
+      />
+      <LearnMoreModal
+        isOpen={isLearnMoreOpen}
+        onClose={() => setIsLearnMoreOpen(false)}
+      />
     </div>
   );
 };

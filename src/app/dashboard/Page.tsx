@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import ProductCard from "@/components/ProductCard";
+import ProductDetailsModal from "@/components/ProductDetailsModal";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { FaSearch, FaThLarge, FaList } from "react-icons/fa";
@@ -25,6 +26,8 @@ export default function UserDashboard() {
   const [sortBy, setSortBy] = useState("name");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const router = useRouter();
   const { data: session } = useSession();
 
@@ -140,6 +143,11 @@ export default function UserDashboard() {
       );
     }
     router.push(`/checkout?productId=${product._id}`);
+  };
+
+  const handleViewDetails = (product: Product) => {
+    setSelectedProduct(product);
+    setIsDetailsModalOpen(true);
   };
 
   if (loading) {
@@ -277,6 +285,7 @@ export default function UserDashboard() {
                   rating={4.5}
                   onAddToCart={() => handleAddToCart(product)}
                   onBuyNow={() => handleBuyNow(product)}
+                  onViewDetails={() => handleViewDetails(product)}
                 />
               </div>
             ))}
@@ -298,10 +307,17 @@ export default function UserDashboard() {
                   />
                 </div>
                 <div className="flex-1 w-full">
-                  <h3 className="text-lg lg:text-xl font-bold text-gray-900 mb-2">
+                  <h3
+                    className="text-lg lg:text-xl font-bold text-gray-900 mb-2 cursor-pointer hover:text-green-600 transition-colors"
+                    onClick={() => handleViewDetails(product)}
+                  >
                     {product.name}
                   </h3>
-                  <p className="text-gray-600 mb-3 text-sm lg:text-base line-clamp-2">
+                  <p
+                    className="text-gray-600 mb-3 text-sm lg:text-base line-clamp-2 cursor-pointer hover:text-gray-800 transition-colors"
+                    onClick={() => handleViewDetails(product)}
+                    title="Click to view full description"
+                  >
                     {product.description}
                   </p>
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
@@ -309,6 +325,13 @@ export default function UserDashboard() {
                       Rs. {product.price}
                     </span>
                     <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
+                      <button
+                        onClick={() => handleViewDetails(product)}
+                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold transition-colors text-sm lg:text-base flex items-center justify-center space-x-2"
+                      >
+                        <span>🔍</span>
+                        <span>View Details</span>
+                      </button>
                       <button
                         onClick={() => handleAddToCart(product)}
                         className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-semibold transition-colors text-sm lg:text-base"
@@ -354,6 +377,17 @@ export default function UserDashboard() {
             )}
           </div>
         )}
+
+        {/* Product Details Modal */}
+        <ProductDetailsModal
+          isOpen={isDetailsModalOpen}
+          onClose={() => setIsDetailsModalOpen(false)}
+          product={selectedProduct}
+          onAddToCart={() =>
+            selectedProduct && handleAddToCart(selectedProduct)
+          }
+          onBuyNow={() => selectedProduct && handleBuyNow(selectedProduct)}
+        />
       </div>
     </div>
   );
