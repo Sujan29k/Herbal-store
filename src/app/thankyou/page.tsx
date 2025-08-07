@@ -24,9 +24,10 @@ export default function ThankYouPage() {
             Order Confirmed!
           </h1>
           <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-            Thank you for choosing our herbal products! We&apos;re preparing
-            your order with care and you&apos;ll receive a confirmation email
-            with tracking details shortly.
+            Thank you for choosing our herbal products! We&apos;ve sent a
+            confirmation email with your order details. Our team is now
+            preparing your order with care and you&apos;ll receive tracking
+            information shortly.
           </p>
 
           {/* Order Details */}
@@ -48,7 +49,7 @@ export default function ThankYouPage() {
                 <span className="bg-green-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm">
                   1
                 </span>
-                <span>Order confirmation email sent</span>
+                <span>Confirmation email sent to your inbox</span>
               </li>
               <li className="flex items-center space-x-3">
                 <span className="bg-green-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm">
@@ -66,7 +67,7 @@ export default function ThankYouPage() {
                 <span className="bg-green-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm">
                   4
                 </span>
-                <span>Delivered to your doorstep</span>
+                <span>Tracking details sent via email & SMS</span>
               </li>
             </ul>
           </div>

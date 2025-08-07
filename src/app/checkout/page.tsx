@@ -20,6 +20,7 @@ function CheckoutPageContent() {
   const searchParams = useSearchParams();
 
   const [products, setProducts] = useState<Product[]>([]);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -134,6 +135,8 @@ function CheckoutPageContent() {
       return;
     }
 
+    setIsProcessing(true); // Start loading
+
     try {
       const res = await fetch("/api/order", {
         method: "POST",
@@ -156,15 +159,24 @@ function CheckoutPageContent() {
       const data = await res.json();
 
       if (res.ok) {
-        alert("Order placed successfully!");
+        // Clear cart immediately
         localStorage.removeItem("cart");
+
+        // Show success message
+        alert(
+          "🎉 Order placed successfully! You will receive a confirmation email shortly."
+        );
+
+        // Redirect to thank you page immediately
         router.push("/thankyou");
       } else {
-        alert(data.error || "Failed to place order.");
+        alert(data.error || "Failed to place order. Please try again.");
       }
     } catch (error) {
-      alert("Something went wrong while placing the order.");
-      console.error(error);
+      alert("Something went wrong while placing the order. Please try again.");
+      console.error("Order error:", error);
+    } finally {
+      setIsProcessing(false); // Stop loading
     }
   };
 
@@ -347,9 +359,21 @@ function CheckoutPageContent() {
             {/* Confirm Button */}
             <button
               onClick={handleConfirmPurchase}
-              className="w-full mt-8 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+              disabled={isProcessing}
+              className={`w-full mt-8 font-bold py-4 px-6 rounded-xl transition-all duration-300 transform shadow-lg hover:shadow-xl ${
+                isProcessing
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white hover:scale-105"
+              }`}
             >
-              Complete Purchase
+              {isProcessing ? (
+                <div className="flex items-center justify-center space-x-2">
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                  <span>Processing Order...</span>
+                </div>
+              ) : (
+                "Complete Purchase"
+              )}
             </button>
 
             {/* Security Notice */}
