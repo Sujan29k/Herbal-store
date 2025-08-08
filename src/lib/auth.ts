@@ -1,9 +1,26 @@
-import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import { connectDB } from "@/lib/mongoose";
 import User from "@/models/User";
 import { compare } from "bcryptjs";
+
+export interface NextAuthOptions {
+  providers: any[];
+  pages: {
+    signIn: string;
+  };
+  callbacks: {
+    signIn: (params: any) => Promise<boolean>;
+    jwt: (params: any) => any;
+    session: (params: any) => any;
+  };
+  session: {
+    strategy: "jwt";
+    maxAge: number;
+  };
+  secret?: string;
+  debug?: boolean;
+}
 
 export const authOptions: NextAuthOptions = {
   providers: [

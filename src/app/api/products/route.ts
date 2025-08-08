@@ -19,7 +19,6 @@ export async function GET() {
     }
 
     // Ensure proper serialization for Vercel
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const serializedProducts = products.map((product: any) => ({
       _id: product._id.toString(),
       name: product.name,

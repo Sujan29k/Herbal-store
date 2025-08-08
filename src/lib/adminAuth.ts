@@ -1,11 +1,20 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
+import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth/next";
 import { authOptions } from "./auth";
 
-export async function requireAdminAuth(req: NextRequest) {
+export async function requireAdminAuth() {
   const session = await getServerSession(authOptions);
   
-  if (!session || session.user?.role !== "admin") {
+  if (!session) {
+    return NextResponse.json(
+      { error: "Unauthorized - Admin access required" },
+      { status: 401 }
+    );
+  }
+
+  const userSession = session as { user?: { role?: string } };
+  
+  if (!userSession.user || userSession.user.role !== "admin") {
     return NextResponse.json(
       { error: "Unauthorized - Admin access required" },
       { status: 401 }

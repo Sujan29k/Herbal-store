@@ -5,7 +5,7 @@ import { requireAdminAuth } from "@/lib/adminAuth";
 
 export async function POST(req: NextRequest) {
   // Check admin authentication
-  const authError = await requireAdminAuth(req);
+  const authError = await requireAdminAuth();
   if (authError) return authError;
 
   const body = await req.json();
