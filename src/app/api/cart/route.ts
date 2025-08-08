@@ -6,14 +6,15 @@ import Product from "@/models/Product";
 import User from "@/models/User";
 
 export async function POST(req: NextRequest) {
-  await connectDB();
-  const { email, productId, quantity } = await req.json();
+  try {
+    await connectDB();
+    const { email, productId, quantity } = await req.json();
 
-  console.log("POST /api/cart ->", { email, productId, quantity });
+    console.log("POST /api/cart ->", { email, productId, quantity });
 
-  if (!email || !productId || typeof quantity !== "number") {
-    return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
-  }
+    if (!email || !productId || typeof quantity !== "number") {
+      return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
+    }
 
   const user = await User.findOne({ email });
   if (!user) {
@@ -63,11 +64,15 @@ export async function POST(req: NextRequest) {
     cart.items.push({ productId, quantity });
   }
 
-  cart.markModified("items");
-  await cart.save();
+    cart.markModified("items");
+    await cart.save();
 
-  console.log("Cart updated:", cart);
-  return NextResponse.json({ message: "Cart updated", cart });
+    console.log("Cart updated:", cart);
+    return NextResponse.json({ message: "Cart updated", cart });
+  } catch (error) {
+    console.error("Cart API error:", error);
+    return NextResponse.json({ error: "Failed to update cart" }, { status: 500 });
+  }
 }
 
 export async function GET(req: NextRequest) {

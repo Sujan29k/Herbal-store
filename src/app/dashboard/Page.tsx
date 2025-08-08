@@ -43,12 +43,29 @@ export default function UserDashboard() {
   useEffect(() => {
     async function fetchProducts() {
       try {
-        const res = await fetch("/api/products");
+        console.log("Fetching products...");
+        const res = await fetch("/api/products", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+
         const data = await res.json();
+        console.log("Products fetched successfully:", data.length);
         setProducts(data);
         setFilteredProducts(data);
-      } catch {
-        console.error("Failed to fetch products");
+      } catch (error) {
+        console.error("Failed to fetch products:", error);
+        // Set empty array as fallback
+        setProducts([]);
+        setFilteredProducts([]);
+        // Show user-friendly error message
+        alert("Failed to load products. Please refresh the page.");
       } finally {
         setLoading(false);
       }
@@ -94,7 +111,11 @@ export default function UserDashboard() {
     setFilteredProducts(filtered);
   }, [products, searchTerm, selectedCategory, sortBy]);
 
+  const [addingToCart, setAddingToCart] = useState<string | null>(null);
+
   const handleAddToCart = async (product: Product) => {
+    setAddingToCart(product._id);
+    
     if (isLoggedIn && session?.user?.email) {
       try {
         const res = await fetch("/api/cart", {
@@ -134,6 +155,8 @@ export default function UserDashboard() {
       localStorage.setItem("cart", JSON.stringify(existingCart));
       alert(`✅ "${product.name}" added to cart`);
     }
+    
+    setAddingToCart(null);
   };
 
   const handleBuyNow = (product: Product) => {

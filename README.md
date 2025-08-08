@@ -1,36 +1,166 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# HerbalStore - Natural Wellness E-commerce Platform
 
-## Getting Started
+A modern, full-stack e-commerce application for herbal and natural wellness products, built with Next.js 15, TypeScript, MongoDB, and NextAuth.js.
 
-First, run the development server:
+## 🌿 Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **User Authentication**: Secure login/signup with NextAuth.js
+- **Guest Checkout**: Shop without registration
+- **Product Catalog**: Browse and search herbal products
+- **Shopping Cart**: Add items to cart (local storage for guests, database for users)
+- **Order Management**: Complete checkout process with email notifications
+- **Admin Dashboard**: Manage products and orders
+- **Responsive Design**: Modern UI with Tailwind CSS
+- **Email Notifications**: Order confirmations sent to customers and admin
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Node.js 18+ 
+- MongoDB Atlas account
+- Gmail account (for email notifications)
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd herbalstore
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Set up environment variables**
+   ```bash
+   cp ENVIRONMENT_SETUP.md .env.local
+   # Edit .env.local with your actual values
+   ```
+
+4. **Add sample products**
+   ```bash
+   npm run add-products
+   ```
+
+5. **Start development server**
+   ```bash
+   npm run dev
+   ```
+
+6. **Open your browser**
+   Navigate to [http://localhost:3000](http://localhost:3000)
+
+## 📁 Project Structure
+
+```
+herbalstore/
+├── src/
+│   ├── app/                 # Next.js App Router
+│   │   ├── api/            # API routes
+│   │   ├── dashboard/      # Product catalog
+│   │   ├── cart/          # Shopping cart
+│   │   ├── checkout/      # Checkout process
+│   │   └── ...
+│   ├── components/         # React components
+│   ├── lib/               # Utilities and configurations
+│   ├── models/            # MongoDB schemas
+│   └── types/             # TypeScript type definitions
+├── public/                # Static assets
+└── scripts/               # Database scripts
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🔧 Configuration
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Environment Variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+See [ENVIRONMENT_SETUP.md](./ENVIRONMENT_SETUP.md) for detailed setup instructions.
 
-## Learn More
+Required variables:
+- `MONGODB_URI` - MongoDB connection string
+- `NEXTAUTH_SECRET` - NextAuth secret key
+- `NEXTAUTH_URL` - Application URL
+- `ADMIN_EMAIL` - Gmail address for notifications
+- `ADMIN_EMAIL_PASSWORD` - Gmail app password
 
-To learn more about Next.js, take a look at the following resources:
+### Database Setup
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Create a MongoDB Atlas cluster
+2. Add your connection string to `.env.local`
+3. Run `npm run add-products` to populate sample data
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🛠️ Development
 
-## Deploy on Vercel
+### Available Scripts
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run lint` - Run ESLint
+- `npm run add-products` - Add sample products to database
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Key Features Implementation
+
+- **Authentication**: NextAuth.js with credentials and Google OAuth
+- **Database**: MongoDB with Mongoose ODM
+- **Email**: Nodemailer with Gmail SMTP
+- **Styling**: Tailwind CSS with custom components
+- **State Management**: React hooks and localStorage
+- **API Routes**: Next.js API routes with proper error handling
+
+## 🚀 Deployment
+
+### Vercel Deployment
+
+1. Push your code to GitHub
+2. Connect repository to Vercel
+3. Add environment variables in Vercel dashboard
+4. Deploy!
+
+### Environment Variables for Production
+
+- Set `NEXTAUTH_URL` to your production domain
+- Ensure MongoDB Atlas allows connections from anywhere (0.0.0.0/0)
+- Use Gmail app passwords for email functionality
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+1. **Products not loading**: Check MongoDB connection and environment variables
+2. **Email not sending**: Verify Gmail app password and 2FA setup
+3. **Authentication errors**: Ensure NEXTAUTH_SECRET is set correctly
+4. **Build errors**: Check TypeScript and ESLint configurations
+
+### Debug Mode
+
+Enable debug logging by setting `NODE_ENV=development` in your environment variables.
+
+## 📝 TODO
+
+- [ ] Email verification system
+- [ ] Order history for users
+- [ ] Order cancellation functionality
+- [ ] Review and rating system
+- [ ] Admin review management
+- [ ] Enhanced product filtering
+- [ ] Payment gateway integration
+- [ ] Inventory management
+- [ ] User profile management
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+## 🆘 Support
+
+For support, email [support@herbalstore.com](mailto:support@herbalstore.com) or create an issue in the repository.
