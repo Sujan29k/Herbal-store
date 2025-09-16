@@ -30,7 +30,7 @@ function CheckoutPageContent() {
 
   useEffect(() => {
     const fetchCartProducts = async () => {
-      const productId = searchParams.get("productId");
+      const productId = searchParams ? searchParams.get("productId") : null;
 
       // BUY NOW FLOW
       if (productId) {
