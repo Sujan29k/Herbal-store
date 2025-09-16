@@ -2,14 +2,11 @@ import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongoose";
 import Product from "@/models/Product";
 
-export async function GET(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
+export async function GET(req: Request, context: any) {
   await connectDB();
 
   try {
-    const { id } = params;
+    const { id } = context.params;
 
     const product = await Product.findById(id).lean();
 
