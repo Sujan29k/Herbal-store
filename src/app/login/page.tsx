@@ -30,7 +30,7 @@ export default function LoginPage() {
 
     if (res?.ok) {
       localStorage.removeItem("guest");
-      router.push("/dashboard");
+      router.push("/dash");
     } else {
       alert("Invalid email or password");
     }
@@ -39,7 +39,7 @@ export default function LoginPage() {
 
   const handleGuest = () => {
     localStorage.setItem("guest", "true");
-    router.push("/dashboard");
+    router.push("/dash");
   };
 
   return (
