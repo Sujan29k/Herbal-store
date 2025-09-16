@@ -8,6 +8,9 @@ export interface IProduct extends Document {
   createdAt: Date;
 }
 
+// Type for lean queries (plain objects)
+export type ProductDocument = IProduct & { _id: mongoose.Types.ObjectId };
+
 const ProductSchema = new Schema<IProduct>(
   {
     name: { type: String, required: true },
@@ -22,6 +25,7 @@ const ProductSchema = new Schema<IProduct>(
 );
 
 // Reuse the model if already compiled
-const Product = models.Product || mongoose.model<IProduct>("Product", ProductSchema);
+const Product =
+  models.Product || mongoose.model<IProduct>("Product", ProductSchema);
 
 export default Product;
