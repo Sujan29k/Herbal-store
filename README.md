@@ -52,6 +52,46 @@ A modern, full-stack e-commerce application for herbal and natural wellness prod
 6. **Open your browser**
    Navigate to [http://localhost:3000](http://localhost:3000)
 
+## 👨‍💼 Admin Access
+
+### Creating an Admin User
+
+To access the admin dashboard, you need to create an admin user:
+
+1. **Run the admin creation script**
+   ```bash
+   npx ts-node scripts/createAdmin.ts
+   ```
+   This creates an admin user with:
+   - Email: `admin@jadimart.com`
+   - Password: `admin123`
+   - Role: `admin`
+
+2. **Login as admin**
+   - Go to `/login`
+   - Use the admin credentials above
+   - You'll be automatically redirected to `/admin/dashboard`
+
+### Admin Features
+
+- **Admin Panel Access**: Only visible to users with `role: "admin"`
+- **Automatic Redirects**: Admin users are redirected to admin dashboard on login
+- **Admin Badge**: Visual indicator in navigation showing admin status
+- **Product Management**: Add, edit, and manage products
+- **Order Management**: View and process customer orders
+
+### Manual Admin User Creation
+
+Alternatively, you can manually set a user's role to "admin" in your MongoDB database:
+
+```javascript
+// In MongoDB Compass or shell
+db.users.updateOne(
+  { email: "your-email@example.com" },
+  { $set: { role: "admin" } }
+)
+```
+
 ## 📁 Project Structure
 
 ```

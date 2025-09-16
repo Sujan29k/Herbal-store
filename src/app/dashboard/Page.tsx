@@ -187,6 +187,25 @@ export default function UserDashboard() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Header Section */}
         <div className="text-center mb-12">
+          {session?.user && (session.user as any)?.role === "admin" && (
+            <div className="mb-6">
+              <div className="bg-gradient-to-r from-amber-100 to-yellow-100 border border-amber-200 rounded-xl p-4 max-w-md mx-auto">
+                <div className="flex items-center justify-center space-x-3">
+                  <span className="bg-amber-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                    Admin
+                  </span>
+                  <button
+                    onClick={() => router.push("/admin/dashboard")}
+                    className="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg font-semibold transition-colors text-sm flex items-center space-x-2"
+                  >
+                    <span>⚙️</span>
+                    <span>Go to Admin Panel</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
           <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
             Discover Our
             <span className="text-green-600"> Premium Collection</span>

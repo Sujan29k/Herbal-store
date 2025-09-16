@@ -30,7 +30,16 @@ export default function LoginPage() {
 
     if (res?.ok) {
       localStorage.removeItem("guest");
-      router.push("/dash");
+
+      // Get session to check user role
+      const response = await fetch("/api/auth/session");
+      const sessionData = await response.json();
+
+      if (sessionData?.user?.role === "admin") {
+        router.push("/admin/dashboard");
+      } else {
+        router.push("/dash");
+      }
     } else {
       alert("Invalid email or password");
     }
@@ -153,7 +162,9 @@ export default function LoginPage() {
 
               {/* Google Sign In */}
               <button
-                onClick={() => signIn("google", { callbackUrl: "/dash" })}
+                onClick={() =>
+                  signIn("google", { callbackUrl: "/api/auth/redirect" })
+                }
                 className="w-full bg-white hover:bg-gray-50 text-gray-700 py-3 px-6 rounded-xl font-semibold transition-all duration-200 border border-gray-300 hover:border-gray-400 flex items-center justify-center space-x-3 shadow-sm hover:shadow-md"
               >
                 <Image src="/google.png" alt="Google" width={20} height={20} />

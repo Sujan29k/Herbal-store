@@ -71,6 +71,9 @@ export const authOptions: NextAuthOptions = {
             isOAuth: true,
             role: "user",
           });
+        } else {
+          // Update user object with existing user's role for session
+          user.role = existing.role;
         }
       }
       return true;
