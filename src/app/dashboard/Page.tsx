@@ -112,7 +112,6 @@ export default function UserDashboard() {
   }, [products, searchTerm, selectedCategory, sortBy]);
 
   const handleAddToCart = async (product: Product) => {
-    
     if (isLoggedIn && session?.user?.email) {
       try {
         const res = await fetch("/api/cart", {
@@ -149,10 +148,10 @@ export default function UserDashboard() {
         existingCart.push({ ...product, quantity: 1 });
       }
 
-          localStorage.setItem("cart", JSON.stringify(existingCart));
-    alert(`✅ "${product.name}" added to cart`);
-  }
-};
+      localStorage.setItem("cart", JSON.stringify(existingCart));
+      alert(`✅ "${product.name}" added to cart`);
+    }
+  };
 
   const handleBuyNow = (product: Product) => {
     if (!isLoggedIn) {
