@@ -24,6 +24,10 @@ const nextConfig: NextConfig = {
     ADMIN_EMAIL: process.env.ADMIN_EMAIL,
     ADMIN_EMAIL_PASSWORD: process.env.ADMIN_EMAIL_PASSWORD,
   },
+  experimental: {
+    // Remove any turbopack references that might interfere with build
+    turbo: undefined,
+  },
 };
 
 export default nextConfig;
