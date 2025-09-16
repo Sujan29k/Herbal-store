@@ -36,7 +36,7 @@ export default function Navbar() {
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-3 lg:space-x-4 xl:space-x-6">
               <Link
-                href="/dashboard"
+                href="/dash"
                 className="text-gray-700 hover:text-emerald-600 px-4 lg:px-6 xl:px-8 py-2 lg:py-3 rounded-xl text-sm lg:text-base xl:text-lg font-semibold transition-all duration-200 hover:bg-emerald-50"
               >
                 Products
