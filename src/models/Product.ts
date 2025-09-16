@@ -1,31 +1,25 @@
-import mongoose, { Schema, Document, models } from "mongoose";
+import mongoose, { Schema, Document, Model } from "mongoose";
 
-export interface IProduct extends Document {
+export interface ProductDocument extends Document {
   name: string;
-  description?: string;
+  description: string;
   price: number;
-  image: string; // Base64 image
+  image: string;
   createdAt: Date;
+  updatedAt: Date;
 }
 
-// Type for lean queries (plain objects)
-export type ProductDocument = IProduct & { _id: mongoose.Types.ObjectId };
-
-const ProductSchema = new Schema<IProduct>(
+const ProductSchema: Schema = new Schema<ProductDocument>(
   {
     name: { type: String, required: true },
     description: { type: String },
     price: { type: Number, required: true },
-    image: { type: String, required: true }, // base64
-    createdAt: { type: Date, default: Date.now },
+    image: { type: String, required: true },
   },
-  {
-    versionKey: false, // optional: removes `__v`
-  }
+  { timestamps: true }
 );
 
-// Reuse the model if already compiled
-const Product =
-  models.Product || mongoose.model<IProduct>("Product", ProductSchema);
+const Product: Model<ProductDocument> =
+  mongoose.models.Product || mongoose.model<ProductDocument>("Product", ProductSchema);
 
 export default Product;
