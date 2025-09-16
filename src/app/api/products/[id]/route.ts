@@ -1,18 +1,17 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongoose";
-import Product, { ProductDocument } from "@/models/Product";
+import Product from "@/models/Product";
 
-interface RouteContext {
-  params: { id: string };
-}
-
-export async function GET(req: Request, context: RouteContext) {
+export async function GET(
+  req: Request,
+  { params }: { params: { id: string } }
+) {
   await connectDB();
 
   try {
-    const { id } = context.params;
+    const { id } = params;
 
-    const product: ProductDocument | null = await Product.findById(id).lean();
+    const product = await Product.findById(id).lean();
 
     if (!product) {
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
@@ -20,7 +19,7 @@ export async function GET(req: Request, context: RouteContext) {
 
     const serializedProduct = {
       ...product,
-      _id: (product._id as string | { toString(): string }).toString(),
+      _id: product._id.toString(),
       createdAt: product.createdAt
         ? new Date(product.createdAt).toISOString()
         : null,
