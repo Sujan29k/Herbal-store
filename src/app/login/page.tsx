@@ -153,7 +153,7 @@ export default function LoginPage() {
 
               {/* Google Sign In */}
               <button
-                onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+                onClick={() => signIn("google", { callbackUrl: "/dash" })}
                 className="w-full bg-white hover:bg-gray-50 text-gray-700 py-3 px-6 rounded-xl font-semibold transition-all duration-200 border border-gray-300 hover:border-gray-400 flex items-center justify-center space-x-3 shadow-sm hover:shadow-md"
               >
                 <Image src="/google.png" alt="Google" width={20} height={20} />
