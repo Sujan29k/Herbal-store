@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { SessionProvider } from "next-auth/react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import FooterBottom from "@/components/FooterBottom";
 
 export default function ClientLayout({
   children,
@@ -18,6 +19,9 @@ export default function ClientLayout({
     "/cart",
     "/checkout",
   ]; // routes without Navbar/Footer
+
+  // Check if current path is an admin route or in noLayoutRoutes
+  const isAdminRoute = pathname?.startsWith("/admin");
   const hideLayout = noLayoutRoutes.includes(pathname ?? "");
 
   return (
@@ -27,9 +31,10 @@ export default function ClientLayout({
       refetchOnWindowFocus={true}
     >
       <div className="layout">
-        {!hideLayout && <Navbar />}
+        {!hideLayout && !isAdminRoute && <Navbar />}
         <main className="main-content">{children}</main>
-        {!hideLayout && <Footer />}
+        {!hideLayout && !isAdminRoute && <Footer />}
+        {isAdminRoute && <FooterBottom />}
       </div>
     </SessionProvider>
   );
