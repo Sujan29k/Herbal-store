@@ -1,6 +1,6 @@
+import type { Metadata } from "next";
 import ClientLayout from "../components/ClientLayout";
 import "./globals.css";
-import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Herbal Store - Natural Wellness Products",
