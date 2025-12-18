@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { FaLeaf, FaGlobe, FaUsers, FaSeedling } from "react-icons/fa";
 
@@ -36,16 +38,23 @@ const AboutPage = () => (
         </h1>
       </div>
       <p className="text-lg text-gray-600 max-w-xl mx-auto">
-        HerbalStore is dedicated to bringing you the finest herbal products for your health and wellness journey. Our mission is to make natural remedies accessible, affordable, and trustworthy for everyone.
+        HerbalStore is dedicated to bringing you the finest herbal products for
+        your health and wellness journey. Our mission is to make natural
+        remedies accessible, affordable, and trustworthy for everyone.
       </p>
     </div>
 
     {/* Highlights Section */}
     <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
       {highlights.map((item, idx) => (
-        <div key={idx} className="bg-white rounded-3xl shadow-xl p-8 flex flex-col items-center text-center hover:scale-105 transition-transform duration-300">
+        <div
+          key={idx}
+          className="bg-white rounded-3xl shadow-xl p-8 flex flex-col items-center text-center hover:scale-105 transition-transform duration-300"
+        >
           <div className="mb-4">{item.icon}</div>
-          <h2 className="text-xl font-bold text-green-700 mb-2">{item.title}</h2>
+          <h2 className="text-xl font-bold text-green-700 mb-2">
+            {item.title}
+          </h2>
           <p className="text-gray-700">{item.desc}</p>
         </div>
       ))}
@@ -55,10 +64,15 @@ const AboutPage = () => (
     <div className="max-w-3xl mx-auto bg-white rounded-3xl shadow-2xl p-8 text-center">
       <h2 className="text-2xl font-bold text-green-700 mb-4">Our Story</h2>
       <p className="text-gray-700 text-lg mb-4">
-        Founded by a team of wellness enthusiasts, HerbalStore was born from a passion for holistic health and a desire to make herbal remedies accessible to all. We believe in the power of nature to heal, restore, and rejuvenate.
+        Founded by a team of wellness enthusiasts, HerbalStore was born from a
+        passion for holistic health and a desire to make herbal remedies
+        accessible to all. We believe in the power of nature to heal, restore,
+        and rejuvenate.
       </p>
       <p className="text-gray-700 text-lg mb-4">
-        Every product in our store is carefully selected and tested to meet our high standards. We are committed to sustainability, transparency, and customer satisfaction.
+        Every product in our store is carefully selected and tested to meet our
+        high standards. We are committed to sustainability, transparency, and
+        customer satisfaction.
       </p>
       <p className="text-gray-700 text-lg">
         Thank you for choosing HerbalStore as your partner in wellness!

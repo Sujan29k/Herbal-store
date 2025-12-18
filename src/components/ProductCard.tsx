@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import { FaShoppingCart, FaBolt, FaStar } from "react-icons/fa";
 

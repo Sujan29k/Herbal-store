@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  output: "standalone",
+  transpilePackages: ["react-icons"],
   serverExternalPackages: ["mongoose"],
   images: {
     domains: ["localhost"],
